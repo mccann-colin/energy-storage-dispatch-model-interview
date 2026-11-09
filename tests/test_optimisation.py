@@ -46,23 +46,31 @@ def test_positive_prices(bounds):
 
 def test_full_soc_is_binding(bounds):
     test_price = np.array([-1,-1,-1,-1])
-    starting_state_of_charge = 0
     expected_answer = np.array([0,0,0,0])
     
     problem = setup_solve_with_bounds(test_price, bounds)
-
+    problem.set_asset_energy_capacity(1)
+    problem.set_starting_state_of_charge(1)
+    problem.add_soc_constraint()
     asset_power_decision = problem.solve_for_asset_powers()
     np.testing.assert_allclose(asset_power_decision, expected_answer)
     
-
-
-def test_empty_soc_is_binding(bounds):
-    test_price = np.array([1,1,1,1])
-    starting_state_of_charge = 1
-    expected_answer = np.array([0,0,0,0])
-    
+def test_ramping_positive_prices(bounds):
+    # Used to make sure that the SoC constraint is the behaviour that's making the other test change. 
+    test_price = np.array([1, 2, 3, 4])
+    expected_answer = np.array([1,1,1,1])
     problem = setup_solve_with_bounds(test_price, bounds)
+    asset_power_decision = problem.solve_for_asset_powers()
+    np.testing.assert_allclose(asset_power_decision, expected_answer)
 
+def test_low_soc_is_binding(bounds):
+    # Uses a ramping price series as a purely postive, flat prioce series is degenerate without cycling cost/ efficiencies
+    test_price = np.array([1, 2, 3, 4])
+    expected_answer = np.array([-1,0,0,1])
+    problem = setup_solve_with_bounds(test_price, bounds)
+    problem.set_asset_energy_capacity(1)
+    problem.set_starting_state_of_charge(0)
+    problem.add_soc_constraint()
     asset_power_decision = problem.solve_for_asset_powers()
     np.testing.assert_allclose(asset_power_decision, expected_answer)
     
