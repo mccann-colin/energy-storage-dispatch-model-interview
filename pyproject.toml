@@ -1,0 +1,19 @@
+[project]
+name = "energy-storage-dispatch-model-interview"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "mypy>=2.4.1",
+    "numpy>=2.5.4",
+    "pandas>=3.1.1",
+    "pytest>=9.2.0",
+]
+
+[project.scripts]
+energy-storage-dispatch-model-interview = "energy_storage_dispatch_model_interview:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
