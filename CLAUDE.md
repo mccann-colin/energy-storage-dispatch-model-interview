@@ -31,3 +31,17 @@ instructions, reproducible results, one-paragraph approach summary.
 - The author is learning: explain why a design is good, and link to control and
   biological-modelling analogies where they help.
 - When asked to "advise" or "suggest", don't edit code. Edit only when asked to implement.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default vocabulary: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
