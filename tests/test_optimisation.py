@@ -40,6 +40,20 @@ def test_positive_prices(bounds):
 
     asset_power_decision = problem.solve_for_asset_powers()
     np.testing.assert_allclose(asset_power_decision, expected_answer)
+
+def test_negative_asset_power_upper_bound_rejected():
+    problem = (
+            OptimisationProblem()
+        )
+    with pytest.raises(ValueError):
+        problem.set_asset_power_upper_bound(-1)
+
+def test_positive_asset_power_lower_bound_rejected():
+    problem = (
+            OptimisationProblem()
+        )
+    with pytest.raises(ValueError):
+        problem.set_asset_power_lower_bound(1)
     
 
 def test_full_soc_is_binding(bounds):

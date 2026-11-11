@@ -20,10 +20,14 @@ class OptimisationProblem:
         return self
 
     def set_asset_power_upper_bound(self, asset_power_upper_bound: float) -> "OptimisationProblem":
+        if asset_power_upper_bound <= 0:
+            raise ValueError(f"Asset Power Upper Bound must be > 0. Current value is {asset_power_upper_bound}")
         self._asset_power_upper_bound = asset_power_upper_bound
         return self
 
     def set_asset_power_lower_bound(self, asset_power_lower_bound: float) -> "OptimisationProblem":
+        if asset_power_lower_bound >= 0:
+            raise ValueError(f"Asset Power Lower Bound must be < 0. Current value is {asset_power_lower_bound}")
         self._asset_power_lower_bound = asset_power_lower_bound
         return self
 

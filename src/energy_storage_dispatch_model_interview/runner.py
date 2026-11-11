@@ -7,7 +7,7 @@ def setup_optimisation_problem(prices: ArrayLike) -> "OptimisationProblem":
     problem = (
             OptimisationProblem()
             .add_market_price(prices)
-            .set_asset_power_lower_bound(2)
+            .set_asset_power_lower_bound(-2)
             .set_asset_power_upper_bound(2)
             .set_asset_energy_capacity(4)
             .set_starting_state_of_charge(2)
@@ -24,7 +24,6 @@ def main():
     problem = setup_optimisation_problem(np.asarray([1, 1, 1, 1]))
     asset_power_decision = problem.solve_for_asset_powers()
     print(asset_power_decision)
-
 
 if __name__ == "__main__":
     main()
