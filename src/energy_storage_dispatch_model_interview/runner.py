@@ -2,6 +2,7 @@ from energy_storage_dispatch_model_interview.market import EnergyMarket
 from energy_storage_dispatch_model_interview.optimistion import OptimisationProblem
 from numpy.typing import ArrayLike
 import numpy as np
+import pandas as pd
 
 def setup_optimisation_problem(prices: ArrayLike, starting_soc: float) -> "OptimisationProblem":
     problem = (
@@ -57,6 +58,16 @@ def main():
 
     if len(full_horizon_asset_power_decisions) != num_timestamps:
         raise ValueError("Number of outputs does not match input price series")
+
+    results = pd.DataFrame({
+        "timestamp": hourly_market._timestamps,
+        "price": hourly_market._price,
+        "asset_power_mw": full_horizon_asset_power_decisions,
+    })
+
+    results["revenue"] = results["price"] * results["asset_power_mw"]
+
+    results.to_csv("output/dispatch_results.csv", index=False)
 
     
 if __name__ == "__main__":
