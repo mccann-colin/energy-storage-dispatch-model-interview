@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from numpy.typing import NDArray, ArrayLike
 
 class EnergyMarket:
@@ -9,7 +10,7 @@ class EnergyMarket:
     def read_price_file(self, file_path: str):
         self._file_df = pd.read_csv(file_path)
         self._price = np.asarray(self._file_df["price"])
-        self._timestamps = np.asarray(self._file_df)
+        self._timestamps = np.asarray(self._file_df["timestamps"])
         return self
 
 
