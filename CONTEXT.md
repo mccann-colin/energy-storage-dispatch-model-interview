@@ -4,6 +4,10 @@ A model that schedules a battery's charging and discharging across wholesale ele
 
 ## Language
 
+**Asset**:
+The battery being dispatched.
+_Avoid_: Unit, plant
+
 **Market**:
 A wholesale electricity market with its own price series and its own market interval. The battery buys or sells energy into it.
 _Avoid_: Exchange, venue
