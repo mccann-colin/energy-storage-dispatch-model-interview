@@ -26,6 +26,9 @@ instructions, reproducible results, one-paragraph approach summary.
 2. Small, reviewable changes: one concern per commit; no drive-by refactors.
 3. Test-driven: write a failing test first, then the minimal code to pass it, then
    refactor (use the `tdd` skill). No behaviour change without a test.
+4. Plan before implementing: each slice has a plan in `docs/plans/` (seams, types, ordered
+   tests, seam diagram). The author agrees it before any test or code is written. Keep the
+   plan and its diagram updated as seams, types or tests change.
 
 ## Working with the author
 - The author is learning: explain why a design is good, and link to control and

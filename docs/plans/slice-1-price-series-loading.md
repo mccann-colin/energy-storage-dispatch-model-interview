@@ -1,0 +1,56 @@
+# Slice 1: price-series loading and validation
+
+Status: agreed, not started
+
+## Goal
+- Load a market's prices from CSV into a validated `PriceSeries` on a regular time grid.
+- Implements ADR 0002; vocabulary from `CONTEXT.md` (Price series, Market interval).
+
+## Seams
+- Seam 1: `PriceSeries`, tested with small in-memory arrays.
+- Seam 2: `load_price_series`, tested with small one-day CSV fixtures written in the test.
+
+## Types
+- `load_price_series(path: str | Path, market_interval: timedelta) -> PriceSeries`
+- `PriceSeries(prices: NDArray[float64], start: datetime, market_interval: timedelta)`
+- `PriceSeries.prices`: `NDArray[float64]`.
+- `PriceSeries.start`: `datetime`, naive (no timezone), never converted.
+- `PriceSeries.market_interval`: `timedelta`.
+- `PriceSeries.timestamps`: `NDArray[datetime64]`, regenerated from `start` and `market_interval`.
+
+## Source CSV contract
+- Header is exactly `datetime,price`; any other header raises `ValueError`.
+- `datetime`: only the first row is read, as `start`; later labels are ignored.
+- `price`: £/MWh as a decimal number; blank or non-numeric raises `ValueError`.
+- Comma-separated CSV only; the xlsx is not read.
+- Local data files are renamed to the mandated headers when the runner first needs them.
+
+## Diagram
+```mermaid
+flowchart TD
+    A["Source CSV<br/>header: datetime,price"] --> B["load_price_series (seam 2)<br/>path, market_interval"]
+    B --> C["PriceSeries (seam 1)<br/>prices, start, market_interval, timestamps"]
+    C --> D["Later slices"]
+```
+
+## Tests, in order (one red, then green, at a time)
+- Fixtures are one whole day (24 hourly or 48 half-hourly rows), because partial days are rejected.
+- Expected values are literals, never recomputed from the code under test.
+
+1. Seam 2: known file contents are read correctly (prices as written, in order; `start` from the first label).
+2. Seam 2: time steps are regular, whatever the source labels say (fixture with a duplicate label and a 59:59.999 step).
+3. Seam 2: time steps other than 1 hour are read correctly (half-hourly fixture).
+4. Seam 2: wrong header names raise `ValueError`.
+5. Seam 1: a blank price raises `ValueError`.
+6. Seam 1: a partial day (47 half-hours) raises `ValueError`.
+7. Seam 1: a market interval that does not divide a day (7 h) raises `ValueError`.
+8. Seam 1: an empty series raises `ValueError`.
+
+## Considered and dropped
+- "Whole days are accepted": covered by tests 1 and 3.
+- "Prices are read-only": defensive, not required by the brief or an ADR.
+
+## Out of scope
+- Flagging suspect intervals (repeated or zero prices at clock changes): slice 4.
+- Combining two series onto a base interval: slice 5.
+- Deleting `EnergyMarket` and its test: when `PriceSeries` replaces it.

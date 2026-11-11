@@ -10,5 +10,6 @@ The source timestamps are unreliable, but the files align by row position, so we
 - Regenerate a regular grid from the first stamp and each market's interval length.
 - Join the markets on that grid, which is equivalent to joining by row position.
 - Reject a series with blank prices or a row count that is not a whole number of days.
+- Whole days because we assume day-ahead style trading: a full day's prices are fixed at one gate closure before the day starts, so a partial day is a data fault, not a valid input.
 - Odd-looking values are flagged in the output, not rejected or repaired.
 - This is a workaround: in practice the fix belongs upstream, at wherever the prices come from.
