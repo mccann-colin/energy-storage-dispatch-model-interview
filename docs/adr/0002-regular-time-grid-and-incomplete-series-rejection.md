@@ -1,0 +1,14 @@
+# Rebuild time from a regular grid and reject incomplete price series
+
+Status: accepted
+
+The source timestamps are unreliable, but the files align by row position, so we regenerate time on a regular grid and ignore the source labels.
+
+- Market 1 has 6 duplicate labels and irregular steps, all at the three spring clock changes; the same data is in the source xlsx, so it is not a CSV artefact.
+- Market 2 has 6 steps of 59:59.999 instead of 1 h, from float storage of datetimes.
+- Prices are also repeated or zero around some clock changes.
+- Regenerate a regular grid from the first stamp and each market's interval length.
+- Join the markets on that grid, which is equivalent to joining by row position.
+- Reject a series with blank prices or a row count that is not a whole number of days.
+- Odd-looking values are flagged in the output, not rejected or repaired.
+- This is a workaround: in practice the fix belongs upstream, at wherever the prices come from.
