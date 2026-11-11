@@ -21,7 +21,7 @@ def main():
 
     hourly_market = EnergyMarket()
     hourly_market.read_price_file("market_data_Hourly data.csv")
-    problem = setup_optimisation_problem(np.asarray([1, 1, 1, 1]))
+    problem = setup_optimisation_problem(np.asarray(hourly_market._price[:24]))
     asset_power_decision = problem.solve_for_asset_powers()
     print(asset_power_decision)
 
