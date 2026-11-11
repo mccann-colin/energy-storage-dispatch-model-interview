@@ -1,6 +1,5 @@
 import numpy as np
 from numpy.typing import NDArray, ArrayLike
-
 from scipy.optimize import milp, LinearConstraint, Bounds
 
 
@@ -59,11 +58,12 @@ class OptimisationProblem:
         )
         return self
     
-    def solve_for_asset_powers(self) -> NDarray[np.float64]:
+    def solve_for_asset_powers(self) -> NDArray[np.float64]:
         """Solves for asset powers which are returned as raw MW"""
         result = milp(
             c = -self._prices,
             bounds = Bounds(self._asset_power_lower_bound,self._asset_power_upper_bound),
             constraints=self._constraints
         )
-        return result.x
+        market_power = result.x
+        return market_power

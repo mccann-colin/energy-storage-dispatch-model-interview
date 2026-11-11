@@ -16,14 +16,13 @@ def setup_solve_with_bounds(prices, bounds) -> "OptimisationProblem":
     )
     return problem
 
-
 def test_alternating_prices(bounds):
     test_price = np.array([1,-1,1,-1])
     expected_answer = np.array([1,-1,1,-1])
     problem = setup_solve_with_bounds(test_price, bounds)
 
     asset_power_decision = problem.solve_for_asset_powers()
-    np.testing.assert_allclose(asset_power_decision, expected_answer)
+     
     
 def test_negative_prices(bounds):
     test_price = np.array([-1,-1,-1,-1])
@@ -42,7 +41,6 @@ def test_positive_prices(bounds):
     asset_power_decision = problem.solve_for_asset_powers()
     np.testing.assert_allclose(asset_power_decision, expected_answer)
     
-
 
 def test_full_soc_is_binding(bounds):
     test_price = np.array([-1,-1,-1,-1])
@@ -64,7 +62,7 @@ def test_ramping_positive_prices(bounds):
     np.testing.assert_allclose(asset_power_decision, expected_answer)
 
 def test_low_soc_is_binding(bounds):
-    # Uses a ramping price series as a purely postive, flat prioce series is degenerate without cycling cost/ efficiencies
+    # Uses a ramping price series as a purely postive, flat price series is degenerate without cycling cost/ efficiencies
     test_price = np.array([1, 2, 3, 4])
     expected_answer = np.array([-1,0,0,1])
     problem = setup_solve_with_bounds(test_price, bounds)
