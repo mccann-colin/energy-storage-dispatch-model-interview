@@ -62,9 +62,14 @@ def solve_dispatch(
     cost = np.concatenate(
         [interval_hours * prices, -interval_hours * prices, np.zeros(intervals)]
     )
-    # Only stored energy is bounded: the state of charge stays within [0, capacity].
+    # Each direction of power stays within its own limit, and the state of charge within
+    # [0, capacity]; every unknown is non-negative.
     upper = np.concatenate(
-        [np.full(2 * intervals, np.inf), np.full(intervals, asset.energy_capacity)]
+        [
+            np.full(intervals, asset.max_charge_power),
+            np.full(intervals, asset.max_discharge_power),
+            np.full(intervals, asset.energy_capacity),
+        ]
     )
 
     result = milp(
