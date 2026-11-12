@@ -126,6 +126,18 @@ def test_a_blank_price_is_rejected():
         PriceSeries(prices, START, timedelta(hours=1))
 
 
+def test_a_window_holds_its_prices_and_starts_at_the_matching_time():
+    """Cutting [1, 3) from four hourly prices gives those two prices, starting an hour later,
+    on the same one-hour grid."""
+    series = PriceSeries(np.array([10.0, 20.0, 30.0, 40.0]), START, timedelta(hours=1))
+
+    window = series.window(1, 3)
+
+    np.testing.assert_allclose(window.prices, [20.0, 30.0])
+    assert window.start == datetime(2018, 1, 1, 1, 0)
+    assert window.market_interval == timedelta(hours=1)
+
+
 def test_a_series_that_is_not_a_whole_number_of_days_is_accepted():
     """A PriceSeries may cover any span (a short test series, a foresight window); only loaded
     files must cover whole days (ADR 0002)."""

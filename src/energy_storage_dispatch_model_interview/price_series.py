@@ -41,6 +41,15 @@ class PriceSeries:
         if ONE_DAY % self.market_interval != timedelta(0):
             raise ValueError("Market interval must divide a day exactly")
 
+    def window(self, first: int, stop: int) -> PriceSeries:
+        """The prices at interval positions [first, stop), as a series starting at the
+        matching time."""
+        return PriceSeries(
+            prices=self.prices[first:stop],
+            start=self.start + first * self.market_interval,
+            market_interval=self.market_interval,
+        )
+
     @property
     def timestamps(self) -> NDArray[np.datetime64]:
         """Regular grid rebuilt from `start` and `market_interval`; source labels play no part."""

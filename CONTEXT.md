@@ -41,5 +41,13 @@ Whether the battery is charging or discharging in a base interval. Exactly one a
 _Avoid_: State (overloaded with state of charge), direction
 
 **Foresight window**:
-The stretch of future prices the battery is assumed to know when it chooses its dispatch. Each solve covers one foresight window, only its earliest part is kept, and the next solve starts from the resulting state of charge. Prices beyond the window are unknown.
-_Avoid_: Rolling horizon, lookahead, perfect foresight
+The stretch of future prices the battery is assumed to know when it chooses its dispatch: a committed period followed by a lookahead. Each solve covers one foresight window, and the next solve starts from the state of charge at the end of the committed period. Prices beyond the window are unknown.
+_Avoid_: Rolling horizon, perfect foresight
+
+**Committed period**:
+The part of a foresight window whose dispatch is kept.
+_Avoid_: Applied block, step
+
+**Lookahead**:
+The part of a foresight window beyond the committed period; it informs the committed dispatch and is then discarded.
+_Avoid_: Horizon, forecast
