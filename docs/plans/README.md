@@ -8,7 +8,8 @@ One plan per slice, agreed before any test or code (CLAUDE.md, standard 4). Plan
 - Slice 2a: `Asset`. `slice-2a-asset.md`
 - Slice 2b: dispatch tracer bullet (needs 2a). `slice-2b-dispatch-tracer-bullet.md`
 - Slice 2c: energy and power limits (needs 2b). `slice-2c-limits.md`
-- Slice 3: rolling foresight window; to be split (window arithmetic, carried state of charge, end of series).
+- Slice 3a: cutting windows (committed period plus lookahead). `slice-3a-cutting-windows.md`
+- Slice 3b: rolling solve, carrying state of charge (needs 3a). `slice-3b-rolling-solve.md`
 - Slice 4: results output; deletes the old `optimistion.py` and `EnergyMarket` code.
 - Slice 5: second market; to be split (base interval, expansion matrix, solving).
 - Slice 6: dispatch mode exclusivity.
@@ -20,6 +21,8 @@ One plan per slice, agreed before any test or code (CLAUDE.md, standard 4). Plan
 - Step 12: a battery with impossible efficiencies (zero, negative or above one) is refused; goes with slice 7.
 - Step 13: a starting charge that does not fit the battery (below empty or above full) is refused.
 - Step 14: the battery's values can be changed without editing code. Detail in `slice-2e-load-asset.md`.
+- Step 15: asking for a window outside the series is refused instead of silently clipped.
+- Step 16: a negative lookahead is refused.
 
 ## Priority
 - Reach a working two-market dispatch on the real data first; polish comes after.
