@@ -17,7 +17,7 @@ The fixed period for which a market publishes one price. Capacity committed to a
 _Avoid_: Settlement period, resolution
 
 **Price series**:
-The ordered prices of one market, one per market interval, covering a whole number of days. A series with a blank price or an incomplete day is rejected, not repaired.
+The ordered prices of one market, one per market interval, over any span. A series with a blank price is rejected, not repaired; a file loaded as a series must cover whole days.
 _Avoid_: Price file, price data
 
 **Base interval**:

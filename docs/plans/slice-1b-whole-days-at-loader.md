@@ -30,5 +30,8 @@ flowchart TD
 2. Seam 2: a file holding a partial day is rejected (47 half-hourly rows raises `ValueError`).
 3. Remove the old seam 1 test "a partial day is rejected", replaced by test 2.
 
+## Known and not addressed
+- With an invalid interval (for example 7 h or negative), the loader's whole-days check runs first, so the `ValueError` message blames the row count, not the interval.
+
 ## Out of scope
 - Cutting windows out of a series: slice 3.

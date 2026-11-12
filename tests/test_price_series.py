@@ -91,6 +91,18 @@ def test_a_header_only_file_is_rejected(tmp_path):
         load_price_series(path, market_interval=timedelta(hours=1))
 
 
+def test_a_file_holding_a_partial_day_is_rejected(tmp_path):
+    """A file must cover whole days (day-ahead assumption, ADR 0002): 47 half-hours is a fault."""
+    rows = [
+        (f"2018-01-01 {i // 2:02d}:{30 * (i % 2):02d}:00", float(i))
+        for i in range(47)
+    ]
+    path = write_csv(tmp_path / "prices.csv", "datetime,price", rows)
+
+    with pytest.raises(ValueError):
+        load_price_series(path, market_interval=timedelta(minutes=30))
+
+
 @pytest.mark.parametrize("bad_price", ["", "abc"], ids=["blank", "non-numeric"])
 def test_an_unusable_price_in_the_file_is_rejected(tmp_path, bad_price):
     """A blank or non-numeric price in the CSV fails loading rather than flowing through."""
@@ -114,17 +126,18 @@ def test_a_blank_price_is_rejected():
         PriceSeries(prices, START, timedelta(hours=1))
 
 
-def test_a_partial_day_is_rejected():
-    """Prices must cover whole days (day-ahead assumption): 47 half-hours is a fault."""
-    forty_seven_half_hours = np.zeros(47)
+def test_a_series_that_is_not_a_whole_number_of_days_is_accepted():
+    """A PriceSeries may cover any span (a short test series, a foresight window); only loaded
+    files must cover whole days (ADR 0002)."""
+    series = PriceSeries(np.array([10.0, 20.0, 30.0, 40.0]), START, timedelta(hours=1))
 
-    with pytest.raises(ValueError):
-        PriceSeries(forty_seven_half_hours, START, timedelta(minutes=30))
+    assert len(series.timestamps) == 4
+    assert series.timestamps[-1] == np.datetime64("2018-01-01T03:00:00")
 
 
 def test_a_market_interval_that_does_not_divide_a_day_is_rejected():
-    """The interval itself must divide a day, even when the row count happens to fit."""
-    prices = np.zeros(24)  # 24 x 7 h is a whole number of days, but 7 h does not divide 24 h
+    """A market interval must divide a day exactly, so 7 hours is refused."""
+    prices = np.zeros(24)
 
     with pytest.raises(ValueError):
         PriceSeries(prices, START, timedelta(hours=7))

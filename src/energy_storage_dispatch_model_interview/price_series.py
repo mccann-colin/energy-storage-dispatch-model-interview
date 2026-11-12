@@ -40,9 +40,6 @@ class PriceSeries:
         # timedelta % timedelta is the remainder: zero means the interval divides a day exactly.
         if ONE_DAY % self.market_interval != timedelta(0):
             raise ValueError("Market interval must divide a day exactly")
-        # Day-ahead assumption (ADR 0002): prices cover whole days, never a partial day.
-        if (len(self.prices) * self.market_interval) % ONE_DAY != timedelta(0):
-            raise ValueError("Price series must cover a whole number of days")
 
     @property
     def timestamps(self) -> NDArray[np.datetime64]:
@@ -55,6 +52,7 @@ def load_price_series(path: str | Path, market_interval: timedelta) -> PriceSeri
     """Read a `datetime,price` CSV into a PriceSeries.
 
     Only the first label is used (as `start`); later labels are never parsed (ADR 0002).
+    The file must cover whole days (ADR 0002).
     `market_interval` is supplied by the caller and is not checked against the file.
     """
     table = pd.read_csv(path)
@@ -62,6 +60,9 @@ def load_price_series(path: str | Path, market_interval: timedelta) -> PriceSeri
         raise ValueError(f"CSV header must be {REQUIRED_HEADER}, got {tuple(table.columns)}")
     if table.empty:
         raise ValueError("CSV has a header but no rows")
+    # Day-ahead assumption (ADR 0002): a loaded file covers whole days, never a partial day.
+    if (len(table) * market_interval) % ONE_DAY != timedelta(0):
+        raise ValueError("CSV must cover a whole number of days")
     return PriceSeries(
         # A blank price becomes NaN (rejected by PriceSeries); non-numeric text raises here.
         prices=table["price"].to_numpy(dtype=np.float64),
