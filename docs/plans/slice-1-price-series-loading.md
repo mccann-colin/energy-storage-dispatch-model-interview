@@ -1,6 +1,6 @@
 # Slice 1: price-series loading and validation
 
-Status: implemented (tests 1-8); review follow-ups (tests 9-12) in progress
+Status: implemented; the whole-days rule later moved to the loader (slice 1b)
 
 ## Goal
 - Load a market's prices from CSV into a validated `PriceSeries` on a regular time grid.

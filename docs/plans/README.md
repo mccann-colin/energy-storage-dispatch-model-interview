@@ -4,10 +4,10 @@ One plan per slice, agreed before any test or code (CLAUDE.md, standard 4). Plan
 
 ## Map
 - Slice 1: price-series loading and validation. Done. `slice-1-price-series-loading.md`
+- Slice 1b: whole-days rule moves from `PriceSeries` to the loader (do before 2b). `slice-1b-whole-days-at-loader.md`
 - Slice 2a: `Asset`. `slice-2a-asset.md`
 - Slice 2b: dispatch tracer bullet (needs 2a). `slice-2b-dispatch-tracer-bullet.md`
-- Slice 2c: energy limits (needs 2b). `slice-2c-energy-limits.md`
-- Slice 2d: power limits (needs 2b). `slice-2d-power-limits.md`
+- Slice 2c: energy and power limits (needs 2b). `slice-2c-limits.md`
 - Slice 3: rolling foresight window; to be split (window arithmetic, carried state of charge, end of series).
 - Slice 4: results output; deletes the old `optimistion.py` and `EnergyMarket` code.
 - Slice 5: second market; to be split (base interval, expansion matrix, solving).

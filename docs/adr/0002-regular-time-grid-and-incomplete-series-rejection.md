@@ -10,7 +10,8 @@ The source timestamps are unreliable, but the files align by row position, so we
 - Regenerate a regular grid from the first stamp and each market's interval length.
 - Join the markets on that grid, which is equivalent to joining by row position.
 - Reject a series with blank prices or a row count that is not a whole number of days.
-- Whole days because we assume day-ahead style trading: a full day's prices are fixed at one gate closure before the day starts, so a partial day is a data fault, not a valid input.
+- A loaded file must cover whole days because we assume day-ahead style trading: a full day's prices are fixed at one gate closure before the day starts, so a partial day is a data fault, not a valid input.
+- A `PriceSeries` itself may cover any span of prices, so windows and short test series are allowed.
 - Odd-looking values are flagged in the output, not rejected or repaired.
 - The market interval is supplied by the caller; it is not read from the file or checked against it.
 - Passing the wrong interval for a file (1 h for a half-hourly file) is therefore not detected: every timestamp and revenue figure would be silently wrong.
