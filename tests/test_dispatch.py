@@ -29,8 +29,8 @@ def test_a_full_battery_sells_its_energy_when_the_price_is_positive():
 
 @pytest.mark.parametrize("market_count", [0, 2])
 def test_zero_or_two_markets_are_rejected(market_count):
-    """Until a second market is supported, zero or two markets are refused: with two, charging
-    in one and discharging in the other would be free arbitrage, as exclusivity is not modelled."""
+    """Exactly one market is supported: with two, charging in one and discharging in the other
+    would be free arbitrage, because nothing stops charge and discharge overlapping."""
     asset = Asset(max_charge_power=2.0, max_discharge_power=2.0, energy_capacity=1.0)
     markets = [hourly_prices(10.0)] * market_count
 

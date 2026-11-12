@@ -31,8 +31,8 @@ def solve_dispatch(
     The unknowns are stacked as x = [charge | discharge | state of charge], each one entry per
     interval. The energy balance A x = b ties each state of charge to the one before it.
     """
-    # One market only until slice 5: with two, nothing yet stops charging in one market while
-    # discharging in the other (exclusivity comes in slice 6).
+    # Exactly one market: with two, nothing here stops charging in one while discharging in the
+    # other, which would be free arbitrage.
     if len(markets) != 1:
         raise ValueError(f"Exactly one market is supported, got {len(markets)}")
     market = markets[0]
@@ -62,8 +62,7 @@ def solve_dispatch(
     cost = np.concatenate(
         [interval_hours * prices, -interval_hours * prices, np.zeros(intervals)]
     )
-    # Power is unbounded above for now: the asset's power limits are applied in slice 2c,
-    # when their tests go red. Stored energy stays within [0, capacity].
+    # Only stored energy is bounded: the state of charge stays within [0, capacity].
     upper = np.concatenate(
         [np.full(2 * intervals, np.inf), np.full(intervals, asset.energy_capacity)]
     )
